@@ -8,6 +8,7 @@ import com.siemens.projectalpha.domain.Cidade;
 import com.siemens.projectalpha.domain.Cliente;
 import com.siemens.projectalpha.domain.Endereco;
 import com.siemens.projectalpha.domain.Estado;
+import com.siemens.projectalpha.domain.ItemPedido;
 import com.siemens.projectalpha.domain.Pagamento;
 import com.siemens.projectalpha.domain.PagamentoComBoleto;
 import com.siemens.projectalpha.domain.PagamentoComCartao;
@@ -20,6 +21,7 @@ import com.siemens.projectalpha.repositories.CidadeRepository;
 import com.siemens.projectalpha.repositories.ClienteRepository;
 import com.siemens.projectalpha.repositories.EnderecoRepository;
 import com.siemens.projectalpha.repositories.EstadoRepository;
+import com.siemens.projectalpha.repositories.ItemPedidoRepository;
 import com.siemens.projectalpha.repositories.PagamentoRepository;
 import com.siemens.projectalpha.repositories.PedidoRepository;
 import com.siemens.projectalpha.repositories.ProdutoRepository;
@@ -48,6 +50,8 @@ public class ProjectalphaApplication implements CommandLineRunner {
 	private PedidoRepository pedidoRepository;
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ProjectalphaApplication.class, args);
@@ -115,6 +119,20 @@ public class ProjectalphaApplication implements CommandLineRunner {
 
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
+		
 	}
 
 
