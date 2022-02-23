@@ -1,8 +1,11 @@
 package com.siemens.projectalpha.resources;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.siemens.projectalpha.domain.Categoria;
+import com.siemens.projectalpha.dto.CategoriaDTO;
 import com.siemens.projectalpha.services.CategoriaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +53,14 @@ public class CategoriaResource {
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CategoriaDTO>> findAll() {
+        List<Categoria> list = service.findAll();
+        List<CategoriaDTO> listDto = list.stream()
+                .map(cat -> new CategoriaDTO(cat)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
     }
 
 }
