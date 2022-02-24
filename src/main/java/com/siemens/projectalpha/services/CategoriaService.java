@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.siemens.projectalpha.domain.Categoria;
+import com.siemens.projectalpha.dto.CategoriaDTO;
 import com.siemens.projectalpha.repositories.CategoriaRepository;
 import com.siemens.projectalpha.services.exceptions.DataIntegrityException;
 import com.siemens.projectalpha.services.exceptions.ObjectNotFoundException;
@@ -54,5 +55,9 @@ public class CategoriaService {
     public Page<Categoria> findPage(Integer page, Integer size, String orderBy, String direction) {
         PageRequest pageRequest = PageRequest.of(page, size, Direction.valueOf(direction), orderBy);
         return repo.findAll(pageRequest);
+    }
+
+    public Categoria fromDTO(CategoriaDTO objDto) {
+        return new Categoria(objDto.getId(), objDto.getNome());
     }
 }
