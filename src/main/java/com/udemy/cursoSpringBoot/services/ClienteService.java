@@ -6,11 +6,14 @@ import java.util.Optional;
 import com.udemy.cursoSpringBoot.domain.Cidade;
 import com.udemy.cursoSpringBoot.domain.Cliente;
 import com.udemy.cursoSpringBoot.domain.Endereco;
+import com.udemy.cursoSpringBoot.domain.enums.Perfil;
 import com.udemy.cursoSpringBoot.domain.enums.TipoCliente;
 import com.udemy.cursoSpringBoot.dto.ClienteDTO;
 import com.udemy.cursoSpringBoot.dto.ClienteNewDTO;
 import com.udemy.cursoSpringBoot.repositories.ClienteRepository;
 import com.udemy.cursoSpringBoot.repositories.EnderecoRepository;
+import com.udemy.cursoSpringBoot.security.UserSS;
+import com.udemy.cursoSpringBoot.services.exceptions.AuthorizationException;
 import com.udemy.cursoSpringBoot.services.exceptions.DataIntegrityException;
 import com.udemy.cursoSpringBoot.services.exceptions.ObjectNotFoundException;
 
@@ -36,6 +39,12 @@ public class ClienteService {
 	private BCryptPasswordEncoder pe;
 
     public Cliente find(Integer id) {
+
+        UserSS user = UserService.authenticated();
+		if (user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+
         Optional<Cliente> obj = repo.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException(
             "Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
